@@ -17,4 +17,3 @@ export default class TitlesList extends React.Component {
         );
     }
 }
-

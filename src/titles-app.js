@@ -25,7 +25,6 @@ export default class TitlesApp extends React.Component {
 
     async showDetails(id) {
         const titleDetailResponse = await this.getCall('oneTitle', {id});
-        console.log(titleDetailResponse);
         this.setState({selectedTitleDetails: titleDetailResponse.data})
     }
 
