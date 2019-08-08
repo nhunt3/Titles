@@ -10,58 +10,42 @@ export default class TitlesApp extends React.Component {
         super(props);
         this.state = {
           allTitles: [],
-          selectedTitle: null,
-          searchText: ''
+          selectedTitleDetails: {}
         };
     }
 
-    componentDidMount() {
-        const that = this;
-        axios.get('http://localhost:3001/allTitles')
-        .then(function (response) {
-            // console.log(response.data);
-            that.setState({allTitles: response.data});
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
+    getCall(route, params) {
+        return axios.get('http://localhost:3001/' + route, {params});
     }
 
-    showDetails(titleId) {
-        this.setState({selectedTitle: titleId})
+    async componentDidMount() {
+        const titlesResponse = await this.getCall('allTitles', {});
+        this.setState({allTitles: titlesResponse.data});
     }
 
-    search(searchText) {
-        this.setState({searchText: searchText});
+    async showDetails(id) {
+        const titleDetailResponse = await this.getCall('oneTitle', {id});
+        console.log(titleDetailResponse);
+        this.setState({selectedTitleDetails: titleDetailResponse.data})
+    }
+
+    async search(searchText) {
+        const titlesResponse = await this.getCall('allTitles', {searchText}); 
+        this.setState({allTitles: titlesResponse.data});
     }
 
     render() {
-        const filteredTitles = this.state.searchText === '' ? this.state.allTitles : this.state.allTitles.filter(titleObj => 
-            titleObj.TitleName.toLowerCase().includes(this.state.searchText.toLowerCase())
-        );
-
-        const titlesList = filteredTitles.map(function(titleObj) {
-            return {
-                name: titleObj.TitleName,
-                id: titleObj.TitleId
-            }
-        });
-
-        const selectedTitleDetails = this.state.selectedTitle !== null ? this.state.allTitles.filter(titleObj => {
-            return titleObj.TitleId === this.state.selectedTitle
-        })[0] : {};
-
         return (
             <div className="titles-app">
                 <TitlesSearchBar
                     search={searchText => this.search(searchText)}
                 />
                 <TitlesList
-                    titles={titlesList}
+                    titles={this.state.allTitles}
                     showDetails={id => this.showDetails(id)}
                     />
                 <TitleDetails
-                    selectedTitleDetails={selectedTitleDetails}
+                    selectedTitleDetails={this.state.selectedTitleDetails}
                 />
             </div>
         );
