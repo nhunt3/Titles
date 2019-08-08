@@ -9,6 +9,7 @@
   float: right;
   width: 49%;
   height: 70vh;
+  overflow: auto;
 }
 
 .titles-app {
