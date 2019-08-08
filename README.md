@@ -1,3 +1,5 @@
 open a terminal and cd to the directory you cloned this to and run the following:
-```npm i
-npm start```
+```
+npm i
+npm start
+```
